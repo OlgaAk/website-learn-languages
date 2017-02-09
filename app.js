@@ -79,38 +79,40 @@ app.post('/admin', function (req, res) {
     }
 }); 
 
-    app.listen(port);
-console.log('Listening on port ' + port);
+   
 
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : 'secret',
-  database : 'my_db'
+  host     : 'example.org',
+  user     : 'bob',
+  password : 'secret'
 });
 
-connection.connect();
+connection.connect(function(err) {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
 
-connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-  if (error) throw error;
-  console.log('The solution is: ', results[0].solution);
+  console.log('connected as id ' + connection.threadId);
 });
 
-connection.end();
-
-// var sql = "SELECT * FROM ?? WHERE ?? = ?";
-// var inserts = ['users','id', 'userId'];
-// sql= mysql.format(sql, inserts);
+var sql = "SELECT * FROM ?? WHERE ?? = ?";
+var inserts = ['users','id', 'userId'];
+sql= mysql.format(sql, inserts);
 
 
-// app.get('/', function(req, res, next) {
-//    
-//      connection.query("SELECT 1 + 1 AS solution union SELECT 3 AS solution",  function(err, rows, fields) {
-//        mess = [];   
-//         //          подготовка массива объектов для вывода
-//         res.render('admin', { auth: req.session.auth, table: mess
-// });
-//      });
-//      console.log(obj);
-// });
+app.get('/', function(req, res, next) {
+   
+     connection.query("SELECT 1 + 1 AS solution union SELECT 3 AS solution",  function(err, rows, fields) {
+       mess = [];   
+        //          подготовка массива объектов для вывода
+        res.render('admin', { auth: req.session.auth, table: mess
+});
+     });
+     console.log(obj);
+});
+
+
+ app.listen(port);
+console.log('Listening on port ' + port);
